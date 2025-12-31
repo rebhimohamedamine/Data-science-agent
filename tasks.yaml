@@ -1,0 +1,171 @@
+planning_task:
+  description: >
+    Analyze the business problem: "{topic}" and create a comprehensive 
+    data science project plan. The plan should include:
+    
+    1. Problem understanding and business objectives
+    2. Data requirements and expected characteristics
+    3. Exploratory Data Analysis (EDA) objectives:
+       - Key statistical summaries needed
+       - Data quality checks to perform
+       - Patterns and relationships to investigate
+    4. Modeling strategy:
+       - Problem type identification (classification, regression, etc.)
+       - Baseline model candidates to consider
+       - Evaluation metrics to use
+    5. Expected deliverables and success criteria
+    6. Potential risks and mitigation strategies
+    
+    The plan should be detailed, structured, and actionable, providing clear 
+    guidance for the data analyst, modelling engineer, and report writer.
+    Consider the dataset at {csv_path} in your planning.
+  expected_output: >
+    A detailed project plan document (500-800 words) with clear sections 
+    covering problem definition, EDA objectives, modeling strategy, evaluation 
+    approach, and success criteria. The plan should be specific enough to guide 
+    subsequent analysis and modeling tasks.
+  agent: project_planner
+
+exploratory_analysis_task:
+  description: >
+    Perform comprehensive exploratory data analysis on the dataset at {csv_path}.
+    Follow the plan provided by the Project Planner and conduct thorough 
+    statistical analysis.
+    
+    Use your available tools to:
+    1. Load and inspect the dataset structure using CSV Reader Tool
+    2. Calculate comprehensive statistics using Data Statistics Tool
+    3. Analyze the findings and identify:
+       - Dataset characteristics (size, features, types)
+       - Data quality issues (missing values, outliers, duplicates)
+       - Distribution of numerical variables
+       - Frequency distributions of categorical variables
+       - Potential relationships and patterns
+       - Key insights relevant to the business problem
+    
+    Provide a well-structured exploratory analysis report with clear sections,
+    statistical findings, and preliminary insights that will inform model selection.
+  expected_output: >
+    A comprehensive EDA report (800-1200 words) with the following sections:
+    - Dataset Overview (dimensions, variables, types)
+    - Data Quality Assessment (missing values, duplicates, outliers)
+    - Numerical Variables Analysis (distributions, statistics, correlations)
+    - Categorical Variables Analysis (frequencies, cardinalities)
+    - Key Findings and Insights
+    - Recommendations for Modeling
+    
+    Include specific statistics, percentages, and observations. Format using 
+    clear headings and bullet points where appropriate.
+  agent: data_analyst
+  context:
+    - planning_task
+
+modeling_proposal_task:
+  description: >
+    Based on the exploratory data analysis findings and the project plan, 
+    design a modeling strategy for the problem: "{topic}".
+    
+    Your proposal should include:
+    1. Problem type identification (classification, regression, clustering, etc.)
+    2. Justification based on EDA findings
+    3. Two to three baseline model recommendations:
+       - Model 1: Simple, interpretable baseline (e.g., Linear/Logistic Regression)
+       - Model 2: Ensemble method (e.g., Random Forest)
+       - Model 3: Advanced method (e.g., Gradient Boosting, XGBoost)
+    4. For each model:
+       - Brief description and how it works
+       - Why it's suitable for this problem
+       - Expected strengths and limitations
+    5. Evaluation metrics definition:
+       - Primary metric with justification
+       - Secondary metrics for comprehensive evaluation
+       - Threshold for success based on business requirements
+    6. Validation strategy:
+       - Train-test split approach
+       - Cross-validation method
+       - Handling of imbalanced data (if applicable)
+    7. Feature engineering recommendations
+    8. Next steps for implementation
+  expected_output: >
+    A detailed modeling proposal (700-1000 words) structured as:
+    - Problem Type & Justification
+    - Baseline Model Recommendations (2-3 models)
+      * Model description
+      * Suitability analysis
+      * Expected performance
+    - Evaluation Metrics Framework
+      * Primary and secondary metrics
+      * Success criteria
+    - Validation Strategy
+    - Feature Engineering Suggestions
+    - Implementation Roadmap
+    
+    Be specific about model choices and provide clear reasoning based on 
+    the EDA findings. Include expected metrics ranges if possible.
+  agent: modelling_agent
+  context:
+    - planning_task
+    - exploratory_analysis_task
+
+report_generation_task:
+  description: >
+    Synthesize all previous work into a comprehensive technical report for 
+    the data science project: "{topic}".
+    
+    Compile information from:
+    - The project plan
+    - The exploratory data analysis report
+    - The modeling proposal
+    
+    Create a professional, well-structured technical report that includes:
+    1. Executive Summary (brief overview of problem, approach, and key findings)
+    2. Introduction
+       - Problem statement and business context
+       - Objectives and success criteria
+    3. Data Description
+       - Dataset overview and source
+       - Variables and their types
+       - Data quality assessment
+    4. Exploratory Data Analysis
+       - Statistical summaries
+       - Key patterns and insights
+       - Data quality findings
+    5. Methodology
+       - Proposed models and rationale
+       - Evaluation metrics and validation strategy
+       - Feature engineering approach
+    6. Expected Results & Evaluation
+       - How models will be evaluated
+       - Expected performance considerations
+       - Interpretation guidelines
+    7. Discussion
+       - Insights and implications
+       - Limitations and assumptions
+       - Recommendations
+    8. Conclusion
+       - Summary of approach
+       - Next steps
+       - Business value
+    
+    Format the report in Latex with proper headings, subheadings, bullet 
+    points, and tables where appropriate. Ensure professional presentation 
+    suitable for both technical and business audiences.
+  expected_output: >
+    A complete technical report in Latex format (2000-3000 words) with:
+    - Clear hierarchical structure (# ## ### headings)
+    - Executive summary at the top
+    - All required sections properly formatted
+    - Professional language suitable for stakeholder presentation
+    - Proper citations of statistics and findings
+    - Actionable recommendations
+    - Clean, readable formatting
+    
+    The report should tell a complete story from problem to proposed solution,
+    integrating insights from all previous tasks into a coherent narrative.
+    Save as report_final.md or report_final.tex (LaTeX format).
+  agent: report_writer
+  context:
+    - planning_task
+    - exploratory_analysis_task
+    - modeling_proposal_task
+  output_file: reports/report_final.md
